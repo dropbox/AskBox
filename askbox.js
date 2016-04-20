@@ -140,14 +140,7 @@ $(function () {
             } else {
                 // if the panel just closed, clear the highlights
                 clearHighlights();
-                if (trackingRange) {
-                    console.log("Restoring range");
-                    console.log(trackingRange);
-                    // if we are tracking a range, make that selection active again
-                    var selection = window.getSelection();
-                    selection.removeAllRanges();
-                    selection.addRange(trackingRange);
-                }
+                stopTrackingSelection();
             }
         });
     }
@@ -226,7 +219,7 @@ $(function () {
      * question about the part they've highlighted.
      */
     function startTrackingSelection(range) {
-        trackingRange = range;
+        trackingRange = range.cloneRange();
         adjustButtonPosition();
 
         console.log(trackingRange);
