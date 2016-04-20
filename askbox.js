@@ -88,9 +88,11 @@ $(function () {
                 thisUrl += "&abEO=" + selectionDetails.endOffset;
             }
 
-            var finalMessage = slackUsername + " asks:\n[ " + thisUrl + " ]\n" + slackMessage;
+            var finalMessage = slackUsername + " asks about <" + thisUrl + ">:\n" + slackMessage;
             var json = {
-                'text': finalMessage
+                username: "AskBox",
+                channel: config.channel,
+                text: finalMessage
             };
 
             $.ajax({
