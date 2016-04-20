@@ -221,8 +221,6 @@ $(function () {
     function startTrackingSelection(range) {
         trackingRange = range.cloneRange();
         adjustButtonPosition();
-
-        console.log(trackingRange);
     }
 
     /**
@@ -349,7 +347,11 @@ $(function () {
      * Clear highlight spans that we add for visual reference
      */
     function clearHighlights() {
-        $(".askboxHighlight").contents().unwrap();
+        $(".askboxHighlight").each(function() {
+            var parent = $(this).parent();
+            $(this).contents().unwrap();
+            parent[0].normalize();
+        });
     }
 
     /**
@@ -371,17 +373,18 @@ $(function () {
                 return;
             }
 
-            //// if the selection doesn't start/stop in a text node with an id, stop right here
-            //// FIXME -- not sure how often a user can even do the thing I'm protecting against -- investigate!
-            //if (
-            //    range.startContainer.nodeType != 3 ||
-            //    range.endContainer.nodeType != 3 ||
-            //    range.startContainer.parentNode.id == "" ||
-            //    range.endContainer.parentNode.id == ""
-            //) {
-            //    stopTrackingSelection();
-            //    return;
-            //}
+            // check to make sure we are within a selectable section
+            if (
+                $(range.startContainer.parentNode).closest(".askable").length == 0 ||
+                $(range.endContainer.parentNode).closest(".askable").length == 0
+            ) {
+                // looks like we are not selecting in a valid area.  Don't make
+                // a new selection.  Furthermore, clear any current selection
+                stopTrackingSelection();
+                return;
+            }
+
+
 
             // if the selection start and stop point is the same, we have no selection
             // and can continue
@@ -438,8 +441,8 @@ $(function () {
      * Add a watcher for various events
      */
     function addEventWatches() {
-        // when the mouse button is raised, let's react to the new text selecdtion
-        $(".askable").mouseup(checkForSelection);
+        // when the mouse button is raised, let's check for a new text selection
+        $(document).mouseup(checkForSelection);
 
         // called when the view is scrolled (we may need to move the button)
         $(window).scroll(adjustButtonPosition);
