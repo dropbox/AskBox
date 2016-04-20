@@ -16,6 +16,11 @@ $(function () {
 
     var trackingRange = null;   // the text selection range, if any
 
+    // because the tracking range can change when we modify the DOM,
+    // we want to store the details here so we can properly send them
+    // in the message
+    var selectionDetails = null;
+
     /**
      * Display and error message
      */
@@ -71,22 +76,16 @@ $(function () {
 
             var thisUrl = window.location.href;
             // if we have a selection, let's add those params
-            if (trackingRange) {
-                // capture the details we need to get back to recreate the selection
-                var sn = range.startContainer.parentNode.id;
-                var en = range.endContainer.parentNode.id;
-                var so = range.startOffset;
-                var eo = range.endOffset;
-
+            if (selectionDetails) {
                 if (thisUrl.indexOf("?") == -1) {
-                    thisUrl += "?abSN=" + encodeURI(sn);
+                    thisUrl += "?abSN=" + encodeURI(selectionDetails.startNode);
                 } else {
-                    thisUrl += "&abSN=" + encodeURI(sn);
+                    thisUrl += "&abSN=" + encodeURI(selectionDetails.startNode);
                 }
 
-                thisUrl += "&abSO=" + encodeURI(so);
-                thisUrl += "&abEN=" + encodeURI(en);
-                thisUrl += "&abEO=" + encodeURI(eo);
+                thisUrl += "&abSO=" + selectionDetails.startOffset;
+                thisUrl += "&abEN=" + encodeURI(selectionDetails.endNode);
+                thisUrl += "&abEO=" + selectionDetails.endOffset;
             }
 
             var finalMessage = slackUsername + " asks:\n[ " + thisUrl + " ]\n" + slackMessage;
@@ -210,7 +209,8 @@ $(function () {
         newRange.setStart(foundStartNode, startOffset);
         newRange.setEnd(foundEndNode, endOffset);
 
-        selection.addRange(newRange);
+        trackingRange = newRange;
+        addHighlights();
     }
 
     /**
@@ -220,6 +220,12 @@ $(function () {
      */
     function startTrackingSelection(range) {
         trackingRange = range.cloneRange();
+        selectionDetails = {
+            startNode: trackingRange.startContainer.parentNode.id,
+            endNode: trackingRange.endContainer.parentNode.id,
+            startOffset: trackingRange.startOffset,
+            endOffset: trackingRange.endOffset
+        };
         adjustButtonPosition();
     }
 
@@ -229,6 +235,7 @@ $(function () {
     function stopTrackingSelection() {
         $("#askboxButton").css("bottom", "15px");
         trackingRange = null;
+        selectionDetails = null;
     }
 
     /**
@@ -322,7 +329,7 @@ $(function () {
      * text even if a focus change deselects the text
      */
     function addHighlights() {
-        var safeRanges = getSafeRanges(trackingRange);
+        var safeRanges = getSafeRanges(trackingRange.cloneRange());
 
         for (var i = 0; i < safeRanges.length; i++) {
             window.getSelection().removeAllRanges();
@@ -341,6 +348,7 @@ $(function () {
                 safeRanges[i].surroundContents(highlightSpan);
             }
         }
+
     }
 
     /**
