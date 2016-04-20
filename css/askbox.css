@@ -1,0 +1,185 @@
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.glyphicon-question-sign:before {
+  content: "\e085";
+}
+.glyphicon-remove-sign:before {
+  content: "\e083";
+}
+.glyphicon-ok-sign:before {
+  content: "\e084";
+}
+
+#askboxButton {
+    font-family: "Source Sans Pro", sans-serif;
+
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+
+    background: none;
+
+    color: #007ee5;
+    font-size: 2em;
+
+    text-align: center;
+
+    -webkit-transition: bottom 0.5s;
+    -moz-transition: bottom 0.5s;
+    -ms-transition: bottom 0.5s;
+    -o-transition: bottom 0.5s;
+    transition: bottom 0.5s;
+
+    cursor: pointer;
+}
+
+#askboxButton img {
+    height: 34px;
+    width: 34px;
+    /*opacity: 0.85;*/
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+}
+
+#askboxButton img:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    -webkit-filter: grayscale(0%);
+}
+
+#askboxPanel {
+    font-family: "Source Sans Pro", sans-serif;
+    display: none;
+
+    position: fixed;
+    bottom: 15px;
+    right: 25px;
+    width: 300px;
+    height: 400px;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    background: #d8d8d8;
+    -webkit-box-shadow: 0 5px 15px #000000;
+    -moz-box-shadow: 0 5px 15px #000000;
+    box-shadow: 0 5px 15px #000000;
+
+    color: #ffffff;
+}
+
+#askboxPanel .header {
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 15px 0px 5px 10px;
+    color: #ffffff;
+    background: #007ee5;
+}
+
+#askboxPanel .boxBody {
+    padding: 0px 10px 5px 10px;
+    color: #222222;
+    font-size: 1em;
+}
+
+#askboxPanel .boxBody input, #askboxPanel .boxBody textarea {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 0.8em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: none;
+
+    padding: 5px 8px;
+    margin-bottom: 5px;
+    width: 100%;
+
+    -webkit-box-shadow: inset 2px 2px 4px #999999;
+    -moz-box-shadow: inset 2px 2px 4px #999999;
+    box-shadow: inset 2px 2px 4px #999999;
+}
+
+#askboxPanel .boxBody textarea {
+    resize: none;
+    height: 185px;
+}
+
+#askboxPanel .boxBody #buttonPanel {
+    width: 100%;
+    overflow: auto;
+}
+
+#buttonPanel .formButton {
+    float: right;
+    font-size: 1.5em;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    cursor: pointer;
+}
+
+#buttonPanel #message {
+    float: left;
+    width: 50%;
+    font-size: 0.75em;
+    font-weight: bold;
+    padding: 5px 2px;
+
+    color: rgb(72, 172, 104);
+}
+
+#message.error {
+    color: rgb(232, 33, 16) !important;
+}
+
+#buttonPanel #cancelButton {
+    color: rgb(146, 21, 21)
+    /*color: rgb(237, 122, 111);*/
+}
+
+#buttonPanel #cancelButton:hover {
+    /*color: rgb(194, 28, 28);*/
+    color: rgb(232, 33, 16);
+    /*text-shadow: 0 0 5px rgb(252, 189, 189);*/
+    text-shadow: 1px 1px 2px #999999;
+}
+
+#buttonPanel #sendButton {
+    color: rgb(44, 104, 63);
+    /*color: rgb(134, 196, 154)*/
+}
+
+#buttonPanel #sendButton:hover {
+    /*color: rgb(58, 138, 84);*/
+    color: rgb(72, 172, 104);
+    /*text-shadow: 0 0 5px rgb(134, 196, 154);*/
+    text-shadow: 1px 1px 2px #999999;
+}
+
+.askboxHighlight {
+    background: #ffdede !important;
+}
+
+.askboxHighlightTemp
