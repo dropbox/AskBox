@@ -7,12 +7,14 @@
  * FIXME -- make the slack integration configurable, which probably means AskBox needs to call an API to get that config from the server
  */
 $(function () {
-
     // default config
     var config = {
-        SLACK_URL: "https://hooks.slack.com/services/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",
-        channel: "#monitoring-help"
+        SLACK_URL: "https://slackurl",
+        channel: "#our-channel",
+        restrict: ".askable",
     };
+    var ROOTURL = "";
+
 
     var trackingRange = null;   // the text selection range, if any
 
@@ -74,21 +76,27 @@ $(function () {
         if (validateForm(slackUsername, slackMessage)) {
             showNormalMessage("Sending...");
 
-            var thisUrl = window.location.href;
+            var newUrl = null;
             // if we have a selection, let's add those params
             if (selectionDetails) {
-                if (thisUrl.indexOf("?") == -1) {
-                    thisUrl += "?abSN=" + encodeURI(selectionDetails.startNode);
+                var splitUrl = window.location.href.split("#");
+                newUrl = splitUrl[0];
+                if (newUrl.indexOf("?") == -1) {
+                    newUrl += "?abSN=" + encodeURI(selectionDetails.startNode);
                 } else {
-                    thisUrl += "&abSN=" + encodeURI(selectionDetails.startNode);
+                     newUrl += "&abSN=" + encodeURI(selectionDetails.startNode);
                 }
 
-                thisUrl += "&abSO=" + selectionDetails.startOffset;
-                thisUrl += "&abEN=" + encodeURI(selectionDetails.endNode);
-                thisUrl += "&abEO=" + selectionDetails.endOffset;
+                newUrl += "&abSO=" + selectionDetails.startOffset;
+                newUrl += "&abEN=" + encodeURI(selectionDetails.endNode);
+                newUrl += "&abEO=" + selectionDetails.endOffset;
+
+                if (splitUrl.length == 2) {
+                    newUrl += "#" + splitUrl[1];
+                }
             }
 
-            var finalMessage = slackUsername + " asks about <" + thisUrl + ">:\n" + slackMessage;
+            var finalMessage = slackUsername + " asks about <" + newUrl + ">:\n" + slackMessage;
             var json = {
                 username: "AskBox",
                 channel: config.channel,
@@ -150,7 +158,7 @@ $(function () {
      * Add the question mark button to the DOM and wire in the behavior
      */
     function addAskButton() {
-        $("body").append("<div id='askboxButton'><img src='css/images/askBoxButton.png' /></div>");
+        $("body").append("<div id='askboxButton'><img src='" + ROOTURL + "css/images/askBoxButton.png' /></div>");
         $("#askboxButton").click(toggleAskBox);
     }
 
@@ -162,7 +170,7 @@ $(function () {
         var askboxPanel = $("#askboxPanel");
         askboxPanel.append("<div class='header'>Ask the Monitoring Team</div>");
 
-        var boxBody = $("<div class='boxbody'></div>");
+        var boxBody = $("<div class='boxBody'></div>");
         askboxPanel.append(boxBody);
         boxBody.append("<p>Enter your Slack username and question.  We'll post your question and a link to this page straight to " + config.channel + ".</p>");
 
@@ -178,11 +186,11 @@ $(function () {
         var messageField = $("<div id='message'></div>");
         buttonPanel.append(messageField);
 
-        var sendButton = $("<span id='sendButton' class='formButton glyphicon glyphicon-ok-sign'></span>");
+        var sendButton = $("<span id='sendButton' class='formButton'><img src='" + ROOTURL + "css/images/btn_confirm.png' /></span>");
         buttonPanel.append(sendButton);
         sendButton.click(sendMessage);
 
-        var cancelButton = $("<span id='cancelButton' class='formButton glyphicon glyphicon-remove-sign'></span>");
+        var cancelButton = $("<span id='cancelButton' class='formButton'><img src='" + ROOTURL + "css/images/btn_cancel.png' /></span>");
         buttonPanel.append(cancelButton);
         cancelButton.click(cancelMessage);
     }
@@ -247,6 +255,9 @@ $(function () {
     function adjustButtonPosition() {
         if (trackingRange) {
             var selectionRect = trackingRange.getClientRects();
+            if (!selectionRect || selectionRect.length == 0) {
+                return;
+            }
             var askboxButton = $("#askboxButton");
             var trackedBottom = selectionRect[selectionRect.length - 1].bottom;
             var newBottom = window.innerHeight - trackedBottom;
@@ -383,15 +394,17 @@ $(function () {
                 return;
             }
 
-            // check to make sure we are within a selectable section
-            if (
-                $(range.startContainer.parentNode).closest(".askable").length == 0 ||
-                $(range.endContainer.parentNode).closest(".askable").length == 0
-            ) {
-                // looks like we are not selecting in a valid area.  Don't make
-                // a new selection.  Furthermore, clear any current selection
-                stopTrackingSelection();
-                return;
+            if (config.restrict) {
+                // check to make sure we are within a selectable section
+                if (
+                    $(range.startContainer.parentNode).closest(config.restrict).length == 0 ||
+                    $(range.endContainer.parentNode).closest(config.restrict).length == 0
+                ) {
+                    // looks like we are not selecting in a valid area.  Don't make
+                    // a new selection.  Furthermore, clear any current selection
+                    stopTrackingSelection();
+                    return;
+                }
             }
 
 
@@ -458,9 +471,69 @@ $(function () {
         $(window).scroll(adjustButtonPosition);
     }
 
-    // load the required font file and AskBox CSS file
-    $("head").append($('<link rel="stylesheet" type="text/css" />').attr("href", "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900"));
-    $("head").append($('<link rel="stylesheet" type="text/css" />').attr("href", "css/askbox.css"));
+    /**
+     * Parse the DOM and add id tags to divs, p, span, and li's if missing
+     * id tags are necessary to be accurately capture where a selection is happening
+     */
+    function addMissingIds() {
+        var index = 0;
+        $("div:not([id])").each(function() {
+            $(this).attr("id", "abDiv" + index++);
+        });
+        $("p:not([id])").each(function() {
+            $(this).attr("id", "abP" + index++);
+        });
+        $("span:not([id])").each(function() {
+            $(this).attr("id", "abSpan" + index++);
+        });
+        $("li:not([id])").each(function() {
+            $(this).attr("id", "abLi" + index++);
+        });
+    }
+
+    /**
+     * Bootstrap the config based on query params and load in the css and fonts we need
+     */
+    function bootstrap() {
+        // find out where this script is installed so we know how to find the dependencies
+        // also pull out any config options sent
+        $("script").each(function(index){
+            var src = $(this).attr("src");
+            if (src && src.includes("askbox.js")) {
+                var re = /askbox\.js.*/;
+                ROOTURL = src.replace(/askbox\.js.*/,"");
+                if (src.indexOf("?")) {
+                    var params = src.replace(/.*\?/,"");
+                    var vars = params.split("&");
+                    for (var i = 0; i < vars.length; i++) {
+                        var pair = vars[i].split("=");
+                        switch(pair[0]) {
+                            case "restrict":
+                                if (pair[1] == "false") {
+                                    config.restrict = false;
+                                } else {
+                                    config.restrict = decodeURIComponent(pair[1]);
+                                }
+                                break;
+                            case "channel":
+                                config.channel = decodeURIComponent(pair[1]);
+                                break;
+                            case "slackurl":
+                                config.SLACK_URL = decodeURIComponent(pair[1]);
+                                break;
+                        }
+                    }
+                }
+            }
+        });
+
+        // load the required font file and AskBox CSS file
+        $("head").append($('<link rel="stylesheet" type="text/css" />').attr("href", "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900"));
+        $("head").append($('<link rel="stylesheet" type="text/css" />').attr("href", ROOTURL + "css/askbox.css"));
+    }
+
+    bootstrap();
+    addMissingIds();
 
     // add our elements to the page
     addAskButton();
