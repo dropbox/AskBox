@@ -17,7 +17,7 @@ the user's selected text.
 folder of your web application.  It is important that the
 folder structure be preserved as is.
 
-2. On you page template (or on each page that you want AskBox
+2. On your page template (or on each page that you want AskBox
 to appear), simply import the javascript `askbox.js`.  Be sure
 to specify the following required config options are query
 parameters:
@@ -34,3 +34,5 @@ parameters:
 ```
 <script src="js/askbox.js?channel=%23app-help&slackurl=https%3A%2F%2Fhooks.slack.com%2Fservices%2Fxxxxxxx%2Fxxxxx%2Fxxxxxxxxxxx">
 ```
+
+** NOTE **: don't forget to URL encode the config options
