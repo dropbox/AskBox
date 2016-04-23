@@ -28,6 +28,9 @@ parameters:
     * restrict: (optional) a selector that describes portions
       that should be made selectable (ex: `.askable`).  If you do
       not want to make the entire page selectable, set restrict to
-      `false`.
+      `false`.  The default is to restrict marking selections
+      to elements with the class `.askable`.
 
-
+```
+<script src="js/askbox.js?channel=%23app-help&slackurl=https%3A%2F%2Fhooks.slack.com%2Fservices%2Fxxxxxxx%2Fxxxxx%2Fxxxxxxxxxxx">
+```
