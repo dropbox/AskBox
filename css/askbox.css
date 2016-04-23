@@ -1,0 +1,161 @@
+#askboxButton {
+    font-family: "Source Sans Pro", sans-serif;
+
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+
+    background: none;
+
+    color: #007ee5;
+    font-size: 2em;
+
+    text-align: center;
+
+    -webkit-transition: bottom 0.5s;
+    -moz-transition: bottom 0.5s;
+    -ms-transition: bottom 0.5s;
+    -o-transition: bottom 0.5s;
+    transition: bottom 0.5s;
+
+    cursor: pointer;
+}
+
+#askboxButton img {
+    height: 34px;
+    width: 34px;
+    /*opacity: 0.85;*/
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+}
+
+#askboxButton img:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    -webkit-filter: grayscale(0%);
+}
+
+#askboxPanel {
+    font-family: "Source Sans Pro", sans-serif;
+    display: none;
+
+    position: fixed;
+    bottom: 15px;
+    right: 25px;
+    width: 300px;
+    height: 400px;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    background: #d8d8d8;
+    -webkit-box-shadow: 0 5px 15px #000000;
+    -moz-box-shadow: 0 5px 15px #000000;
+    box-shadow: 0 5px 15px #000000;
+
+    color: #ffffff;
+}
+
+#askboxPanel .header {
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 15px 0px 5px 10px;
+    color: #ffffff;
+    background: #007ee5;
+}
+
+#askboxPanel .boxBody {
+    padding: 0px 10px 5px 10px;
+    font-size: 1em;
+}
+
+#askboxPanel p {
+    padding: 0;
+    color: #222222;
+    margin-bottom: 16px;
+    line-height: 20px;
+}
+
+#askboxPanel .boxBody input, #askboxPanel .boxBody textarea {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 0.8em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: none;
+
+    padding: 5px 8px;
+    margin-bottom: 5px;
+    width: 100%;
+
+    -webkit-box-shadow: inset 2px 2px 4px #999999;
+    -moz-box-shadow: inset 2px 2px 4px #999999;
+    box-shadow: inset 2px 2px 4px #999999;
+}
+
+#askboxPanel .boxBody textarea {
+    resize: none;
+    height: 185px;
+}
+
+#askboxPanel .boxBody #buttonPanel {
+    width: 100%;
+    overflow: auto;
+}
+
+#buttonPanel .formButton {
+    float: right;
+    font-size: 1.5em;
+    padding-left: 2px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    cursor: pointer;
+}
+
+#buttonPanel #message {
+    float: left;
+    width: 50%;
+    font-size: 0.75em;
+    font-weight: bold;
+    padding: 5px 2px;
+
+    color: rgb(72, 172, 104);
+}
+
+#message.error {
+    color: rgb(232, 33, 16) !important;
+}
+
+#buttonPanel #cancelButton img {
+    max-width: 24px;
+    max-height: 24px;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+}
+
+#buttonPanel #cancelButton img:hover {
+    filter: grayscale(0%);
+    -webkit-filter: grayscale(0%);
+}
+
+#buttonPanel #sendButton img {
+    max-width: 24px;
+    max-height: 24px;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+}
+
+#buttonPanel #sendButton img:hover {
+    filter: grayscale(0%);
+    -webkit-filter: grayscale(0%);
+}
+
+.askboxHighlight {
+    background: rgb(252, 232, 151);
+}
